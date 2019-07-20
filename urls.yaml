@@ -1,0 +1,52 @@
+# This is an example urls.yaml file for urlwatch
+
+# A basic URL job just needs a URL
+#name: "urlwatch webpage"
+#url: "https://thp.io/2008/urlwatch/"
+
+# You can use a pre-supplied filter for this, here we apply two:
+# the html2text filter that converts the HTML to plaintext and
+# the grep filter that filters lines based on a regular expression
+#filter: html2text,grep:Current.*version,strip
+---
+# Built-in job kind "shell" needs a command specified
+#name: "Home Listing"
+#command: "ls -al ~"
+#---
+#name: "Login to some webpage (custom job)"
+#url: "http://example.org/"
+# This job kind is defined in hooks.py, so you need to enable it
+#kind: custom-login
+# Additional parameters for the custom-login job kind can be specified here
+#username: "myuser"
+#password: "secret"
+# Filters can be specified here, separated by comma (these are also from hooks.py)
+#filter: case:upper,indent:5
+---
+# If you want to use spaces in URLs, you have to URL-encode them (e.g. %20)
+#url: "http://example.org/With%20Spaces/"
+---
+# POST requests are done by providing a post parameter
+#url: "http://example.com/search.cgi"
+#data: "button=Search&q=something&category=4"
+---
+# You can use a custom HTTP method, this might be useful for cache invalidation
+#url: "http://example.com/foo"
+#method: "PURGE"
+---
+# You can do POST requests by providing data parameter.
+# POST data can be a URL-encoded string (see last example) or a dict.
+#url: "http://example.com/search.cgi"
+#data:
+#  button: Search
+#  q: something
+#  category: 4
+
+url: https://bck.hermes.com/product?urlParams=fh_view_size=108%26country=uk%26fh_location=--/categories%253C%257Bcatalog01_women_womenbagssmallleathergoods_womenbagsbagsclutches%257D/object_type_filter%253E%257Bpochettes%253Bsacs_bandouliere%253Bsacs_besace%253Bsacs_porte_epaule%253Bsacs_porte_main%257D%26fh_start_index=108%26fh_refpath=64eacb74-8600-40eb-84a3-5350faa5ed9f%26fh_refview=lister%26fh_reffacet=object_type_filter&locale=uk_en&category=WOMENBAGSBAGSCLUTCHES&sort=relevance&pagesize=108
+filter:
+#    - re.findall:
+#        pattern: ^{"total":(\d*)
+    - jsonpath.two:
+        pattern: $.products[*].(title|avgColor)
+ignore_http_error_codes: 4xx, 5xx
+
